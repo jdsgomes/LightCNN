@@ -4,7 +4,6 @@
     @date: 2017.07.04
 '''
 
-from __future__ import print_function
 import argparse
 import os
 import shutil
@@ -28,7 +27,7 @@ from load_imglist import ImageList
 
 parser = argparse.ArgumentParser(description='PyTorch ImageNet Feature Extracting')
 parser.add_argument('--arch', '-a', metavar='ARCH', default='LightCNN')
-parser.add_argument('--cuda', '-c', default=True)
+parser.add_argument('--cuda', '-c', action='store_true')
 parser.add_argument('--resume', default='', type=str, metavar='PATH',
                     help='path to latest checkpoint (default: none)')
 parser.add_argument('--model', default='', type=str, metavar='Model',
@@ -74,10 +73,12 @@ def main():
     for img_name in img_list:
         count = count + 1
         img   = cv2.imread(os.path.join(args.root_path, img_name), cv2.IMREAD_GRAYSCALE)
+        print(img_name)
+        print(img.shape)
+        img   = cv2.resize(img, (128,128))
         img   = np.reshape(img, (128, 128, 1))
         img   = transform(img)
         input[0,:,:,:] = img
-
         start = time.time()
         if args.cuda:
             input = input.cuda()
